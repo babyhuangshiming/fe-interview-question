@@ -96,3 +96,59 @@
 ```
 
 ### 8、实现一个弹窗，使用单例模式
+```
+    var $ = function (id) {
+        var dom = typeof id === 'string' ? document.getElementById(id) : id;
+        return dom;
+    }
+
+    function Modal (id, content) {
+        this.id = name;
+        this.content = content;
+        this.hasOpen = false;
+    }
+
+    Modal.prototype.create = function () {
+        if (!this.hasOpen) {
+            // 没有打开，创建
+            var modal = document.createElement('div');
+            modal.innerHtml = this.content;
+            modal.id = this.id;
+            document.body.appendChild(modal);
+            setTimeout(function () {
+                modal.classList.add('show');
+            }, 0);
+            this.open = true;
+        }
+    };
+
+    Modal.prototype.close = function() {
+        if (this.hasOpen) {
+            var modal = $(this.id);
+            modal.classList.add('hide');
+            setTimeout(function () {
+                document.body.removeChild(modal);
+            }, 200);
+            this.hasOpen = false;
+        }
+    };
+
+    var createInstance = (function () {
+        var instance;
+        return function () {
+            return instance || (instance = new Modal('modal', '这是一个弹窗'))
+        }
+    })();
+
+
+    var operation = {
+        setModal: null;
+        open: function () {
+            this.setModal = createInstance();
+            this.setModal.create();
+        },
+        delete: function () {
+            this.setModal ? this.setModal : '';
+        }
+    };
+```
