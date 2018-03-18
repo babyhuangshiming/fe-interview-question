@@ -473,3 +473,30 @@ function deepCopy (originObject, copyObject) {
     }
 }
 ```
+
+## 19、快排
+```javascript
+function quickSort (arr) {
+    if (arr.length < 2) {
+        return arr;
+    }
+
+    var pivoIndex = Math.floor(arr.length / 2);
+    var pivot = arr.splice(pivoIndex, 1)[0];
+
+    var left = [];
+    var right = [];
+
+    var length = arr.length;
+    for(var i = 0; i < length; i++) {
+        if (arr[i] < pivot) {
+            left.push(arr[i]);
+        } else {
+            right.push(arr[i])
+        }
+    }
+
+    return quickSort(left).concat(pivot, quickSort(right));
+}
+
+```
