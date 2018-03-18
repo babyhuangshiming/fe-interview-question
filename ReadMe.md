@@ -341,7 +341,7 @@ BFC是块级格式化上下文,他规定了内部的Block_level box 是如何布
 
 闭合浮动
 
-1. 给float的父元素增加
+1. 给float的父元素增加
 
 ``` css
     .div :after {
@@ -355,5 +355,121 @@ BFC是块级格式化上下文,他规定了内部的Block_level box 是如何布
 
 2. 使父元素形成一个BFC，通过设置height, overflow, display等方法。
 
+## 14、js防抖
+```javascript
+function debounce (fn, delay) {
+    var ctx;
+    var args;
+    var timer = null;
+    return function () {
+        ctx = this;
+        args = arguments;
+        if (timer) {
+            clearTimeout(timer);
+            timer = null;
+        }
 
+        timer = setTimeout(function () {
+            fn.apply(ctx, this);
+            timer = null;
+        }, delay);
+    }
+}
+```
 
+## 15、js节流
+```javascript
+function throttle (fn, delay) {
+    var ctx;
+    var args;
+    var previousTime = Date.now();
+
+    return function () {
+        ctx = this;
+        args = arguments;
+        var nowTime = Date.now();
+        var diff = nowTime - previousTime - delay;
+        if (diff >= 0) {
+            setTimeout(function () {
+                fn.apply(ctx, args);
+            }, delay);
+            previousTime = nowTime;
+        }
+    }
+}
+```
+## 16、实现一个promise
+```javascript
+// 简单的promise
+function newPromise (fn) {
+    var events = [];
+    this.then = function (func) {
+        events.push(func);
+        return this;
+    }
+
+    function resolve(newValue) {
+        var func = events.shift();
+        func(newValue, resolve);
+    }
+
+    fn(resolve);
+}
+
+var myPromise = new newPromise(function (resolve) {
+    console.log('get...');
+    setTimeout(function () {
+        console.log('get 1');
+        resolve(1);
+    }, 1000);
+});
+
+myPromise.then(function (value, resolve) {
+    console.log('get...');
+    setTimeout(function () {
+        console.log('get 2');
+        resolve(3);
+    }, 1000);
+}).then(function (value) {
+    console.log(value);
+});
+```
+一个简易版本，reject部分还没有实现
+
+## 17、实现new
+```javascript
+    function _new(fn) {
+        // 创建一个新对象
+        var myObj = {};
+        // 将this引用该对象，并且讲该对象的继承指向构造函数的原型对象
+        myObj.__proto__ = fn.prototype;
+        fn.call(myObj);
+        // 将该对象返回
+        return myObj;
+    }
+```
+
+## 18、实现深度拷贝
+```javascript
+/*
+* 深度拷贝
+*/
+function deepCopy (originObject, copyObject) {
+    var copyObj = copyObject || {};
+    for (var i in originObject) {
+        if (typeof originObject[i] === 'object') {
+            // 是对象
+            if (originObject[i].constructor === Array) {
+                // 是数组
+                copyObject[i] = [];
+            } else {
+                copyObject[i] = {};
+            }
+            return deepCopy(originObject[i], copyObject[i]);
+        } else {
+            copyObject[i] = originObject[i];
+            return copyObject[i];
+        }
+    }
+}
+```
