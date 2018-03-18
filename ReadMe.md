@@ -1,102 +1,96 @@
 # 整理前端面试题
----
 
-### 1、盒模型
-```
-    盒模型有标准W3C盒模型和怪异盒模型两种
-    
-    根据box-sizing的值可以来设置是 W3C盒模型 还是 怪异盒模型
+## 1、盒模型
 
-    属性为 content-box 为W3C 盒模型 它的内容为 content + padding + border + margin
-          border-box 为怪异盒模型 它的内容为 content + margin (它的content 包括 content + padding + border)
-```
+盒模型有标准W3C盒模型和怪异盒模型两种，根据box-sizing的值可以来设置是`W3C盒模型`还是`怪异盒模型`.
 
-### 2、3栏布局
-```
-    1、最好的方法  直接flex
+1. 属性为 content-box 为W3C 盒模型 它的内容为 content + padding + border + margin;
 
-    2、自适应部分们可以用calc 计算宽度，左右两个float正常布局就行
+2. border-box 为怪异盒模型 它的内容为 content + margin (它的content 包括 content + padding + border)
 
-    3、注意一下双飞翼布局，中间的div再包裹一个子div  三个外部的div都用float布局
-```
+## 2、3栏布局
 
-### 3、== 与 === 的区别
-``` 
-    === 直接判断类型，在判断是否相等
+1. 最好的方法  直接`flex`
 
-    == 会有隐式类型转换
+2. 自适应部分们可以用`calc` 计算宽度，左右两个float正常布局就行
 
-    string/number/boolean/object  ---> (false) undefined/null
+3. 注意一下双飞翼布局，中间的div再包裹一个子div  三个外部的div都用float布局
 
-    string ---> number  string 要先转换成number
+## 3、== 与 === 的区别
 
-    boolean ---> number boolean 要先转换成number
+1. === 直接判断类型，在判断是否相等
 
-    object ---> 先通过valueOf进行转换，如果为基本类型值则进行比较，否则再进行toString转换，如果还不相等，则进行number转换后比较
+2. == 会有隐式类型转换
 
-```
+- string/number/boolean/object  ---> (false) undefined/null
 
-### 4、typeof的各种
-```
-    注意一下 function 类型
+- string ---> number  string 要先转换成number
 
-    typeof null === 'object';
-    typeof NaN === 'number'
-    typeof undefined === 'undfined'
-```
+- boolean ---> number boolean 要先转换成number
 
-### 5、instanceof 的 原理
-```
-        A instanceof B 的原理是
-        查看对象B的prototype 属性指向的原型对象是否在对象A的原型链上，若在则返回true，若不在则返回false
-        简而言之
+- object ---> 先通过valueOf进行转换，如果为基本类型值则进行比较，否则再进行toString转换，如果还不相等，则进行number转换后比较
 
-        就是 
+## 4、typeof的各种
 
-        A.__proto__.__proto__.... = B.prototype;
+注意一下 function 类型
 
-        任何实例对象的__proto__ 都是指向其构造函数的prototype  记住这句话，很重要！！！！
-        __proto__ 隐式原型，作用是形成原型链
-        prototype 显示原型，生成原型对象，方便所有实例，共享原型对象上的方法和属性
-```
+- typeof null === 'object';
+- typeof NaN === 'number'
+- typeof undefined === 'undfined'
 
-### 6、实现bind(使用apply、call)
-```
-    Function.prototype.bind = function (context) {
-        const handler = this;
-        if (arguments.length > 2) {
-            // call的那种形式
-            const args = Array.prototype.slice.call(arguments, 1);
-            return function () {
-                return handler.apply(context, args);
-            }
-        } else {
-            return function () {
-                return handler.apply(context, arguments);
-            }
+## 5、instanceof 的 原理
+
+A instanceof B 的原理是:
+查看对象B的prototype 属性指向的原型对象是否在对象A的原型链上，若在则返回true，若不在则返回false
+
+简而言之就是 
+
+`A.__proto__.__proto__.... = B.prototype;`
+
+ `任何实例对象的__proto__ 都是指向其构造函数的prototype`  
+ 记住这句话，很重要！！！！
+- __proto__ 隐式原型，作用是形成原型链
+- prototype 显示原型，生成原型对象，方便所有实例，共享原型对象上的方法和属性
+
+## 6、实现bind(使用apply、call)
+
+``` javascript
+Function.prototype.bind = function (context) {
+    const handler = this;
+    if (arguments.length > 2) {
+        // call的那种形式
+        const args = Array.prototype.slice.call(arguments, 1);
+        return function () {
+            return handler.apply(context, args);
+        }
+    } else {
+        return function () {
+            return handler.apply(context, arguments);
         }
     }
-
+}
 ```
 
-### 7、实现apply
-```
-    Function.prototype.fakeApply = function (context, params = []) {
-        // 指定建立对象
-        const tempContext = context || window;
-        // 建立该对象唯一的方法
-        const fn = Symbol('fn');
-        // 复制该方法到对象上
-        tempContext[fn] = this;
-        // 执行该方法
-        tempContext[fn](...params);
-        // 删除该方法
-        delete tempContext[fn];
-    }
+## 7、实现apply
+
+``` javascript
+Function.prototype.fakeApply = function (context, params = []) {
+    // 指定建立对象
+    const tempContext = context || window;
+    // 建立该对象唯一的方法
+    const fn = Symbol('fn');
+    // 复制该方法到对象上
+    tempContext[fn] = this;
+    // 执行该方法
+    tempContext[fn](...params);
+    // 删除该方法
+    delete tempContext[fn];
+}
 ```
 
-### 8、实现一个弹窗，使用单例模式
-```
+## 8、实现一个弹窗，使用单例模式
+
+``` javascript
     var $ = function (id) {
         var dom = typeof id === 'string' ? document.getElementById(id) : id;
         return dom;
@@ -151,13 +145,13 @@
             this.setModal ? this.setModal : '';
         }
     };
-
-
-    该题的关键点在于，用立即执行函数生成一个实例，保证一个构造函数只有一个实例
 ```
 
-### 9、观察者模式
-```
+该题的关键点在于，用立即执行函数生成一个实例，保证一个构造函数只有一个实例
+
+## 9、观察者模式
+
+``` javascript
 var Observer = {
     var _message = {};
     return {
@@ -193,12 +187,14 @@ var Observer = {
 }
 ```
 
-### 10、继承
-```
-继承有四种
-1、原型继承 
- - 原型继承的缺点，子构造函数不能像父构造函数传递参数，原型上的引用类型值会被所有的实例所共享
+## 10、继承
 
+继承有四种
+1. 原型继承:
+
+    原型继承的缺点，子构造函数不能像父构造函数传递参数，原型上的引用类型值会被所有的实例所共享
+
+``` javascript
 var superType = function () {
     this.superName = 'supernName';
 };
@@ -218,10 +214,13 @@ subType.prototype.getSubType = function() {
 
 var mySubTypeFunc = new subType();
 mySubTypeFunc.getSubType();
+```
 
-2、构造函数继承 
- - 所有的实例都会生成一个自己的副本，解决了原型上的引用类型被共享的问题，但是同时构造函数中的函数却因为每个实例都生成了一个副本导致不能复用，这是构造函数的缺点。
+2. 构造函数继承:
 
+    所有的实例都会生成一个自己的副本，解决了原型上的引用类型被共享的问题，但是同时构造函数中的函数却因为每个实例都生成了一个副本导致不能复用，这是构造函数的缺点。
+
+``` javascript
 var superType = function (name) {
     this.name = name;
 };
@@ -240,10 +239,13 @@ subType.prototype.getName = function () {
 
 var mySubType = new subType('黄小猛', 25);
 mySubType.getName();
+```
 
-3、组合继承
- - 组合继承很好的解决了引用类型的值放在实例中，而需要被共享的函数放在原型上，组合继承的缺点在于，子构造函数需要调用两次父构造函数
+3. 组合继承:
 
+    组合继承很好的解决了引用类型的值放在实例中，而需要被共享的函数放在原型上，组合继承的缺点在于，子构造函数需要调用两次父构造函数
+
+``` javascript
 var superType = function (name) {
     this.name = name;
 };
@@ -262,9 +264,10 @@ subType.prototype.getName = function () {
 
 var mySubType = new subType('黄小猛', 25);
 mySubType.getName();
-
-4、继承式继承
- - 利用Object.create 很好的解决了，调用两次父构造函数的问题
+```
+4. 继承式继承
+    利用Object.create 很好的解决了，调用两次父构造函数的问题
+``` javascript
  var superType = function (name) {
     this.name = name;
 }
@@ -289,3 +292,47 @@ inhrientObj(subType, superType);
 var mySubType = new subType('黄小猛');
 mySubType.getSuperName();
 ```
+
+## 11、闭包 作用域 this
+
+- 闭包 -》 闭包 = 函数 + 函数内部能访问的变量组成
+
+    会在闭包里面嵌套一个函数是因为 要保护里面需要return 出来的局部变量，而不让全局随便对局部变量进行改动导致污染局部变量，所以需要再用一个函数把局部变量return出来，是全局
+    环境中可以使用这个变量，而又不能污染这个局部变量。
+
+- 作用域
+    每一个函数执行时候都会有一个活动对象，如果我要查找一个变量，首先会在局部的作用域内查找，如果没有再一层层往外找，直到找到最外层的window作用域，这种查找的过程形成一个作用域链
+
+- this
+    - 非箭头函数的this是在运行时进行绑定的，并不是在编写的时候绑定的，他的上下文取决于函数调用时候的各种条件。
+
+    - 箭头函数的this 是在定义函数的时候绑定的，箭头函数本身是没有this的，他的this就是写箭头函数的作用域。
+
+
+ ### 12、BFC的原理
+
+BFC是块级格式化上下文,他规定了内部的Block_level box 是如何布局的，并且一个BFC内部的区域是不会影响到这个外部区域的。
+
+- BFC的布局规范
+    1. 内部的box会在垂直方向，一个接一个的放置。
+
+    2. Box垂直方向由margin决定，属于同一个BFC的两个相邻的box的margin会发生重叠（margin塌陷）。
+
+    3. 每个元素的margin box的左边，与包含块的border-box左边相接触（即使存在浮动）。
+
+    4. BFC区域不会与float box重叠。
+
+    5. BFC就是页面上的一个隔离的独立容器，容器的子元素不会影响到外面的元素。
+
+    6. 计算BFC高度时，浮动元素也参与计算。
+
+- 哪些元素生成BFC
+    1. 根元素
+
+    2. float 不为none
+
+    3. position 为fixed 或者 absolute
+
+    4. display 为 inline-block、table-cell、table-caption、flex、inline-flex
+
+    5. overflow 不为 visible
