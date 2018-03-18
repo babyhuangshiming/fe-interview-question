@@ -329,10 +329,31 @@ BFC是块级格式化上下文,他规定了内部的Block_level box 是如何布
 - 哪些元素生成BFC
     1. 根元素
 
-    2. float 不为none
+    2. float 不为 none
 
-    3. position 为fixed 或者 absolute
+    3. position 为 fixed 或者 absolute
 
     4. display 为 inline-block、table-cell、table-caption、flex、inline-flex
 
     5. overflow 不为 visible
+
+## 13、去浮动
+
+闭合浮动
+
+1. 给float的父元素增加
+
+``` css
+    .div :after {
+        content: '';
+        clear: both;
+        height: 0;
+        display: block;
+        visibility: hidden
+    }
+```
+
+2. 使父元素形成一个BFC，通过设置height, overflow, display等方法。
+
+
+
