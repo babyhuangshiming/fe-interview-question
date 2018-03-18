@@ -151,4 +151,141 @@
             this.setModal ? this.setModal : '';
         }
     };
+
+
+    该题的关键点在于，用立即执行函数生成一个实例，保证一个构造函数只有一个实例
+```
+
+### 9、观察者模式
+```
+var Observer = {
+    var _message = {};
+    return {
+        register: function (type, fn) {
+            if (typeof _message[type] === 'undefined') {
+                _message[type] = [fn];
+            } else {
+                _message[type].push(fn);
+            }
+        },
+        fire: function (type, args) {
+            if (!_message[type]) {
+                return;
+            }
+            var events = {
+                type: type,
+                args: args || {}
+            }
+            for (var i = 0; i < _message[type].length; i++) {
+                _message[type][i].call(this, events);
+            }
+        },
+
+        remove: function (type, fn) {
+            if (_message[type] instanceof Array) {
+                var i = _message[type].length - 1;
+                for(; i > 0; i--) {
+                    _message[type].[i] === fn && _message[type].splice(i, 1);
+                }
+            }
+        }
+    }
+}
+```
+
+### 10、继承
+```
+继承有四种
+1、原型继承 
+ - 原型继承的缺点，子构造函数不能像父构造函数传递参数，原型上的引用类型值会被所有的实例所共享
+
+var superType = function () {
+    this.superName = 'supernName';
+};
+superType.prototype.getSuperName = function () {
+    return this.superName;
+};
+
+var subType = function () {
+    this.subName = 'subName';
+}
+
+subType.prototype = new superType();
+
+subType.prototype.getSubType = function() {
+    return this.subName;
+};
+
+var mySubTypeFunc = new subType();
+mySubTypeFunc.getSubType();
+
+2、构造函数继承 
+ - 所有的实例都会生成一个自己的副本，解决了原型上的引用类型被共享的问题，但是同时构造函数中的函数却因为每个实例都生成了一个副本导致不能复用，这是构造函数的缺点。
+
+var superType = function (name) {
+    this.name = name;
+};
+
+
+var subType = function (name, age) {
+    superType.call(this, name);
+    this.array = [1, 2, 3, 4, 5, 6];
+    this.age = age;
+}
+
+// subType.prototype = new superType();
+subType.prototype.getName = function () {
+    return this.name;
+}
+
+var mySubType = new subType('黄小猛', 25);
+mySubType.getName();
+
+3、组合继承
+ - 组合继承很好的解决了引用类型的值放在实例中，而需要被共享的函数放在原型上，组合继承的缺点在于，子构造函数需要调用两次父构造函数
+
+var superType = function (name) {
+    this.name = name;
+};
+
+
+var subType = function (name, age) {
+    superType.call(this, name);
+    this.array = [1, 2, 3, 4, 5, 6];
+    this.age = age;
+}
+
+subType.prototype = new superType();
+subType.prototype.getName = function () {
+    return this.name;
+}
+
+var mySubType = new subType('黄小猛', 25);
+mySubType.getName();
+
+4、继承式继承
+ - 利用Object.create 很好的解决了，调用两次父构造函数的问题
+ var superType = function (name) {
+    this.name = name;
+}
+
+superType.prototype.getSuperName = function () {
+    return this.name;
+}
+
+var subType = function (name) {
+    superType.call(this, name);
+    this.array = [1, 2, 3, 4, 5];
+}
+
+var inhrientObj = function (subObj, superObj) {
+    var obj = Object.create(superObj.prototype);
+    obj.constructor = subObj;
+    subObj.prototype = obj;
+}
+
+inhrientObj(subType, superType);
+
+var mySubType = new subType('黄小猛');
+mySubType.getSuperName();
 ```
