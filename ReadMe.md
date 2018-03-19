@@ -500,3 +500,37 @@ function quickSort (arr) {
 }
 
 ```
+
+## 20、300ms延时问题
+首先是移动端的事件touch:
+
+- touchstart 手指开始触摸屏幕时触发事件
+- touchmove 手机在屏幕上移动时，连续触发事件
+- touchend 手指离开屏幕时，触发事件
+- touchcance 触发事件被意外事件（如电话或者弹窗）终止时触发，使用较少
+
+1. 触摸事件的响应顺序
+
+    - touchstart 
+    - touchmove
+    - touchend 
+    - onclick 300ms 延时
+
+2. 300ms双击缩放
+  应对小屏幕浏览桌面端站点的问题，约定了 双击缩放，也就是会有300ms延迟的主要问题，当用户一次点击屏幕之后，浏览器并不能立刻判断用户是否要进行双击缩放，还是要进行单机操作，因此ios的Safari就会等待300ms，以判断用户是否再次点击了屏幕。
+
+  可以用fastClick解决，也可以用zepto的tap事件解决，但是tap事件会有点透问题
+
+  用户点击屏幕的时候会产生两个事件，一个是touch事件，一个是click事件，touch事件会先执行，再执行click事件，（300ms才会触发click）。使用fastClick的原理就是在touchstart阶段，阻止系统的click冒泡，
+  dom.addEventListener('touchstart', function (e) {
+      e.preventDefault();
+  });
+
+  当手指触摸到屏幕的时候，系统生成两个事件，一个是touch 一个是click，touch先执行，touch执行完成后，A从文档树上面消失了，而且由于移动端click还有延迟200-300ms的关系，当系统要触发click的时候，发现在用户点击的位置上面，目前离用户最近的元素是B，所以就直接把click事件作用在B元素上面了.
+
+  dom.addEventListener('touchend', function(e) {
+      e.preventDefault();
+    });
+
+
+    
