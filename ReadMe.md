@@ -517,7 +517,7 @@ function quickSort (arr) {
     - onclick 300ms 延时
 
 2. 300ms双击缩放
-  应对小屏幕浏览桌面端站点的问题，约定了 双击缩放，也就是会有300ms延迟的主要问题，当用户一次点击屏幕之后，浏览器并不能立刻判断用户是否要进行双击缩放，还是要进行单机操作，因此ios的Safari就会等待300ms，以判断用户是否再次点击了屏幕。
+  应对小屏幕浏览桌面端站点的问题，约定了 双击缩放，也就是会有300ms延迟的主要问题，当用户一次点击屏幕后，浏览器并不能立刻判断用户是否要进行双击缩放，还是要进行单机操作，因此ios的Safari就会等待300ms，以判断用户是否再次点击了屏幕。
 
   可以用fastClick解决，也可以用zepto的tap事件解决，但是tap事件会有点透问题
 
@@ -673,7 +673,7 @@ CORS是跨源资源分享（Cross-Origin Resource Sharing）的缩写。它是W3
 - Access-Control-Allow-Credentials
 - Access-Control-Expose-Headers
 
-## 23 DOM原生的API
+## 23 DOM原生的API
 1. 选择子选择器
 
 - Node.childNodes
@@ -682,11 +682,11 @@ CORS是跨源资源分享（Cross-Origin Resource Sharing）的缩写。它是W3
 
 - document.querySelectorAll
 
-- Node.firstChild // 第一个子节点
+- Node.firstChild // 第一个子节点
 
 - Node.lastChild // 最后一个子节点
 
-- Node.nextSibling // 后一个兄弟节点
+- Node.nextSibling // 后一个兄弟节点
 
 - Node.previousSiling // 前一个兄弟节点
 
