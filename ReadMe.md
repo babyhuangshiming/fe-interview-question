@@ -504,7 +504,7 @@ function quickSort (arr) {
 ## 20、300ms延时问题
 首先是移动端的事件touch:
 
-- touchstart 手指开始触摸屏幕时触发事件
+- touchstart 手指开始触摸屏幕时触发事件
 - touchmove 手机在屏幕上移动时，连续触发事件
 - touchend 手指离开屏幕时，触发事件
 - touchcance 触发事件被意外事件（如电话或者弹窗）终止时触发，使用较少
@@ -575,7 +575,7 @@ var Queue = function () {
 - 域名相同
 - 端口相同
 
-- 同源话 不同的页面间可以共享相同的localStorage，但是不同页面或者标签之间无法共享sessionStorage的信息的。
+- 同源话不同的页面间可以共享相同的localStorage，但是不同页面或者标签之间无法共享sessionStorage的信息的。
 - 但是同源下，一个标签页面包含多个iframe标签且他们属于同源页面，他们之间是可以共享sessionStorage的。
 
 不同源下，下面三种行为是受到限制的
@@ -626,7 +626,7 @@ var popup = window.open('http://bbb.com', 'title');
 popup.postMessage('hello world', 'http://bbb.com');
 
 向父级iframe传值
-window.top.postMessage('hello world');
+window.top.postMessage('hello world', '*');
 
 父子窗口都可以通过message事件，监听对方的消息
 ```javascript
