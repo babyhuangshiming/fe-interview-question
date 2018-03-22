@@ -533,4 +533,143 @@ function quickSort (arr) {
     });
 
 
-    
+## 21 用两个栈实现队列
+``` javascript
+var Stack = function () {
+    var item = [];
+    this.push = function (node) {
+        item.push(node);
+    };
+    this.pop = function () {
+        item.pop();
+    };
+    this.isEmpty = function () {
+        return item.length === 0;
+    };
+}
+
+var Queue = function () {
+    var stack1 = new Stack();
+    var stack2 = new Stack();
+
+    this.push = function (node) {
+        stack1.push(node);
+    };
+
+    this.pop = function () {
+        if (stack2.isEmpty()) {
+            while (!stack1.isEmpty()) {
+                stack2.push(stack1.pop());
+            }
+        }
+
+        return stack2.pop();
+    }
+}
+```
+
+## 22 同源政策
+
+所谓同源政策就是指的
+- 协议相同
+- 域名相同
+- 端口相同
+
+- 同源话 不同的页面间可以共享相同的localStorage，但是不同页面或者标签之间无法共享sessionStorage的信息的。
+- 但是同源下，一个标签页面包含多个iframe标签且他们属于同源页面，他们之间是可以共享sessionStorage的。
+
+不同源下，下面三种行为是受到限制的
+
+1. Cookie、LocalStorage和IndexDB无法获取。
+2. DOM无法获得
+3. Ajax请求不能发送
+
+如何规避上面三种限制
+
+1. 如果两个网页，一级域名相同，二级域名不同，浏览器允许通过设置document.domain共享Cookie。document.domain = 'genshuixue.com'，以上三种方式只适合于Cookie和iframe窗口。
+
+2. iframe ,对于完全不同源的网站，有三种方式可以解决跨域窗口的通信问题。
+- 片段识别符 
+- window.name
+- 跨文档通信API
+
+片段识别符 Url的#号后面的部分
+父窗口可以把信息写入子窗口的片段标识符
+
+var src = originURL + '#' + data;
+
+document.getElementById('myIFrame').src = src;
+
+子窗口可以通过监听hashchange事件得到通知
+
+window.onhashchange = checkMessage;
+
+function checkMessage () {
+    var message = window.location.hash
+}
+
+或者子窗口也可以改变父窗口的片段标识符
+
+parent.location.href = target + '#' + hash;
+
+3. window.name
+window.name = data;
+
+这种方法的优点是，window.name容量很大，可以放置非常长的字符串；缺点是必须监听子窗口window.name属性的变化，影响网页性能。
+
+4. window.postMessage
+H5 为了解决这个问题，引入了window.postMessage
+
+postMessage 有两个参数
+
+var popup = window.open('http://bbb.com', 'title');
+popup.postMessage('hello world', 'http://bbb.com');
+
+向父级iframe传值
+window.top.postMessage('hello world');
+
+父子窗口都可以通过message事件，监听对方的消息
+```javascript
+window.addEventListener('message', function(e) {
+  console.log(e.data);
+},false);
+```
+
+message对象的事件对象event，提供以下三个属性
+- event.source: 发送消息的窗口
+- event.origin 消息法向的网址
+- event.data 消息内容
+
+ajax
+- JSONP
+- WebSocket
+- CORS
+
+实现一个JSONP封装的过程
+``` javascript
+function addScriptTag (src) {
+    var script = document.createElement('script');
+    script.setAttribute('type', 'text/javascript');
+    script.src = src;
+    document.body.appendChild(script);
+}
+window.onload = function () {
+    addScriptTag('http://example.com/ip?callback=foo');
+}
+
+function foo(data) {
+    console.log('....' + data.ip);
+}
+```
+
+websocket 设置 websocket的origin也可以做这个
+
+5. CORS
+
+CORS是跨源资源分享（Cross-Origin Resource Sharing）的缩写。它是W3C标准，是跨源AJAX请求的根本解决方法。相比JSONP只能发GET请求，CORS允许任何类型的请求。
+
+设置 
+- Access-Control-Allow-Origin
+- Access-Control-Allow-Credentials
+- Access-Control-Expose-Headers
+
