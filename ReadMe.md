@@ -593,7 +593,7 @@ var Queue = function () {
 - window.name
 - 跨文档通信API
 
-片段识别符 Url的#号后面的部分
+片段识别符 Url的#号后面的部分
 父窗口可以把信息写入子窗口的片段标识符
 
 var src = originURL + '#' + data;
@@ -642,12 +642,12 @@ message对象的事件对象event，提供以下三个属性
 
 ajax
 - JSONP
-- WebSocket
+- WebSocket
 - CORS
 
 实现一个JSONP封装的过程
 ``` javascript
-function addScriptTag (src) {
+function addScriptTag (src) {
     var script = document.createElement('script');
     script.setAttribute('type', 'text/javascript');
     script.src = src;
