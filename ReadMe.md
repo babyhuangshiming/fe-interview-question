@@ -750,7 +750,55 @@ const sleep = (timeoutMS) => new Promise((resolve) => {
     console.log(i);
 })();
 ```
+## 25 curry-柯里化
+- curry是指的是把一个多参数的函数转换为一个嵌套的一元函数的过程
+初始化的curry函数：
+```javascript
+// es5版本的
+const curry = (binaryFn) => {
+    return function (firstArg) {
+        return function (secondArg) {
+            return binaryFn(firstArg, secondArg);
+        }
+    }
+}
 
+const curryES6 = (binaryFn) = > firstArg => secondArg => binaryFn(firstArg, secondArg);
+```
+以上curry函数只能是传递接受两个参数的函数作为curry函数的参数
+下面是处理多个参数的curry函数
+```javascript
+let curryMutiple = (fn) => {
+    if (typeof fn !== 'function') {
+        throw Error('No function provider');
+    }
+
+    return function curriedFn(...args) {
+        return fn.apply(null, args);
+    }
+}
+```
+如果想把多参数的函数转换为嵌套的一元函数
+```javascript
+let curryMutiple3 = (fn) => {
+    if (typeof fn !== 'function') {
+        throw Error('No function provider');
+    }
+
+    return function curriedFn(...args) {
+        if (args.length < fn.length) {
+            return function () {
+                //console.log([].slice.call(arguments));
+                return curriedFn.apply(null, args.concat(
+                    [].slice.call(arguments);
+                ))
+            }
+        }
+
+        return fn.apply(null, args);
+    }
+}
+```
 
 
 
